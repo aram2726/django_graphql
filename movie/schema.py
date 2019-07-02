@@ -7,6 +7,14 @@ from .models import Movie
 class MovieType(DjangoObjectType):
     class Meta:
         model = Movie
+        # only_fields
+        # exclude_fields
+
+    # extra_field = graphne.<SomeField>
+    # def resolve_extra_field(self, info)
+
+    # @classmethod
+    # def get_queryset(cls, queryset, info): ...
 
 
 class Query(graphene.ObjectType):
@@ -14,6 +22,7 @@ class Query(graphene.ObjectType):
     movie = graphene.Field(MovieType, id=graphene.Int())
 
     def resolve_movies(self, info, **kwargs):
+        # if info.context.user.is_authenticated():
         return Movie.objects.all()
 
     def resolve_movie(self, info, **kwargs):
