@@ -7,17 +7,30 @@ from .models import Movie
 class MovieType(DjangoObjectType):
     class Meta:
         model = Movie
-        # only_fields
-        # exclude_fields
-
-    # extra_field = graphne.<SomeField>
-    # def resolve_extra_field(self, info)
-
-    # @classmethod
-    # def get_queryset(cls, queryset, info): ...
 
 
-class Query(graphene.ObjectType):
+class MovieInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+
+
+class CreateMovie(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+
+    ok = graphene.Boolean()
+    movie = graphene.Field(lambda: MovieType)
+
+    def mutate(root, info, name):
+        movie = Movie(name=name)
+        ok = True
+        return CreateMovie(movie=movie, ok=ok)
+
+
+class MyMutations(graphene.ObjectType):
+    create_movie = CreateMovie.Field()
+
+
+class MovieQuery(graphene.ObjectType):
     movies = graphene.List(MovieType)
     movie = graphene.Field(MovieType, id=graphene.Int())
 
@@ -33,4 +46,4 @@ class Query(graphene.ObjectType):
             return None
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=MovieQuery, mutation=MyMutations)
