@@ -10,6 +10,32 @@ class HeroType(DjangoObjectType):
         model = Hero
 
 
+class HeroInput(graphene.InputObjectType):
+    name = graphene.String(required=True)
+    gender = graphene.String(required=True)
+    movie = graphene.Int(required=True)
+
+
+class CreateHero(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+        gender = graphene.String()
+        movie = graphene.Int()
+
+    ok = graphene.Boolean()
+    hero = graphene.Field(lambda: HeroType)
+
+    @staticmethod
+    def mutate(root, info, name, gender, movie):
+        hero = Hero(name=name, gender=gender, movie_id=movie).save()
+        ok = True
+        return CreateHero(hero=hero, ok=ok)
+
+
+class HeroMutations(graphene.ObjectType):
+    create_hero = CreateHero.Field()
+
+
 class Query(graphene.ObjectType):
     heroes = graphene.List(HeroType)
     hero = graphene.Field(HeroType, id=graphene.Int())
@@ -29,4 +55,4 @@ class Query(graphene.ObjectType):
                 return None
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=HeroMutations)

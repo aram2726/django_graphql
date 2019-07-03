@@ -20,13 +20,14 @@ class CreateMovie(graphene.Mutation):
     ok = graphene.Boolean()
     movie = graphene.Field(lambda: MovieType)
 
+    @staticmethod
     def mutate(root, info, name):
-        movie = Movie(name=name)
+        movie = Movie(name=name).save()
         ok = True
         return CreateMovie(movie=movie, ok=ok)
 
 
-class MyMutations(graphene.ObjectType):
+class MovieMutations(graphene.ObjectType):
     create_movie = CreateMovie.Field()
 
 
@@ -46,4 +47,4 @@ class MovieQuery(graphene.ObjectType):
             return None
 
 
-schema = graphene.Schema(query=MovieQuery, mutation=MyMutations)
+schema = graphene.Schema(query=MovieQuery, mutation=MovieMutations)
