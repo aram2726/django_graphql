@@ -1,5 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
 
 from .models import Movie
 
@@ -27,8 +28,30 @@ class CreateMovie(graphene.Mutation):
         return CreateMovie(movie=movie, ok=ok)
 
 
+class UpdateMovie(graphene.Mutation):
+    class Arguments:
+        movie_id = graphene.Int()
+        name = graphene.String()
+
+    ok = graphene.Boolean()
+    movie = graphene.Field(lambda: MovieType)
+
+    @staticmethod
+    def mutate(root, info, movie_id, name):
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            raise GraphQLError("Invalid id %s." % movie_id)
+
+        movie.name = name
+        movie.save()
+        ok = True
+        return UpdateMovie(movie=movie, ok=ok)
+
+
 class MovieMutations(graphene.ObjectType):
     create_movie = CreateMovie.Field()
+    update_movie = UpdateMovie.Field()
 
 
 class MovieQuery(graphene.ObjectType):
