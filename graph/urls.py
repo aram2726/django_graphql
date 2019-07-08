@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from hero.views import hero_view
-from movie.views import movie_view
+from hero.views import HeroView
+from movie.views import MovieView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hero/', hero_view),
-    path('movie/', movie_view),
+    path('hero/', HeroView.as_view()),
+    path('movie/', MovieView.as_view()),
 ]

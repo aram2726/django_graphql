@@ -1,5 +1,8 @@
 from graphene_django.views import GraphQLView
 
-from .schema import schema
+from .schema import schema as movie_schema
 
-movie_view = GraphQLView.as_view(graphiql=True, schema=schema)
+
+class MovieView(GraphQLView):
+    graphiql = True
+    schema = movie_schema
