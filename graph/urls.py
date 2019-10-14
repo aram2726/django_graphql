@@ -16,8 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from hero.views import HeroView
-from movie.views import MovieView
+from apps.hero.views import HeroView
+from apps.movie.views import MovieView
 
 urlpatterns = [
     path('admin/', admin.site.urls),

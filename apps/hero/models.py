@@ -1,6 +1,6 @@
 from django.db import models
 
-from movie.models import Movie
+from apps.movie.models import Movie
 
 
 class Hero(models.Model):

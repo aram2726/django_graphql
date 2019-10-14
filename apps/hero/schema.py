@@ -3,7 +3,7 @@ from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 
 from .models import Hero
-from movie.schema import MovieType
+from apps.movie.schema import MovieType
 
 
 class HeroType(DjangoObjectType):
